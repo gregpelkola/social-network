@@ -52,7 +52,7 @@ const ThoughtController = {
         }
     },
     
-    // Delete a thought by its _id
+    // Create a reaction stored in a single thought's reactions array field
     async createReaction(req, res) {
         try {
             const thought = await Thought.findOneAndUpdate(
