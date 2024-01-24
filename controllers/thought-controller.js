@@ -1,4 +1,4 @@
-const { thought, user, reaction } = require('../models');
+const { Thought, user, reaction } = require('../models');
 const {Types} = require('mongoose');
 
 // Thought controller
@@ -60,7 +60,7 @@ const ThoughtController = {
                 {$addToSet: {reactions: req.body}},
                 {runValidators: true, new: true}
                 );
-                thought ? res.json(thought) : res.status(404).json({message: notFound});
+                thought ? res.json(thought) : res.status(404).json({message: 'Reaction not found"'});
             } catch (e) {
                 res.status(500).json(e);
             }
@@ -74,11 +74,23 @@ const ThoughtController = {
                 {$pull: {reactions: {reactionId: req.params.reactionId}}},
                 {runValidators: true, new: true}
                 );
-                thought ? res.json(thought) : res.status(404).json({message: notFound});
+                thought ? res.json(thought) : res.status(404).json({message: 'Thought not found'});
             } catch (e) {
                 res.status(500).json(e);
             }
         },
-    };
+    async deleteThought(req, res) {
+        try {
+            const thought = await Thought.findByIdAndDelete(req.params.thoughtId);
+            if (!thought) {
+                res.status(404).json({ message: 'Thought not found' });
+            } else {
+                res.json(thought);
+            }
+        } catch (err) {
+            res.status(500).json(err);
+        }
+    },
+};
     
 module.exports = ThoughtController;
